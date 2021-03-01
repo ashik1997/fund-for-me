@@ -1,4 +1,4 @@
-<?php 
+<?php
    include '../config.php';
   session_start();
   if ( empty($_SESSION['userName'])){
@@ -46,71 +46,61 @@
     <section class="content">
         <div class="box">
             <div class="box-header">
-                <h2 class="box-title"> All Event </h2>
+                <h2 class="box-title"> Employee List</h2>
+                <!-- tools box -->
+              <div class="pull-right box-tools">
+                <a href="create_user.php" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Add new employee</a>
+              </div>
+              <!-- /. tools -->
             </div>
             <!-- /.box-header -->
             <div class="box-body" style="overflow-x: auto;">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Serial No</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Donation Amount</th>
-                        <th>Donated Amount</th>
-                        <th>PExpire Date</th>
-                        <th>Image</th>
-                        <th>Pdf</th>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Username</th>
+                        <th>Role</th>
                         <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
-                   		<?php
-                        $serialNo = 1;
-
-                        $sqlFor_event = "SELECT * from event where status=1 order by id desc";
-                        if ($_SESSION['role']=="employee"){
-                          $admin_id = $_SESSION['admin_id'];
-                          $sqlFor_event = "SELECT * from event where status=1 and verify_emp_id = '$admin_id' order by id desc";
+                      <?php
+                        if (isset($_POST['delete'])) {
+                          $id = $_POST['id'];
+                          $sql = "DELETE FROM admin WHERE admin_id='$id'";
+                          if (mysqli_query($con, $sql)) {
+                              echo "Record deleted successfully";
+                          } else {
+                              echo "Error deleting record: " . mysqli_error($con);
+                          }
                         }
-                        $queryFor_event = mysqli_query($con,$sqlFor_event);
-                        while($info = mysqli_fetch_array($queryFor_event)) {
+
+                        $sql_user = "SELECT * from admin order by admin_id desc";
+                        $query_user = mysqli_query($con,$sql_user);
+                        $sl = 1;
+                        while($info = mysqli_fetch_array($query_user)) {
                         ?>
                         <tr>
-                        <td><?php echo $serialNo;?></td>
-                        <td><?php echo $info['title'];?></td>
-                        <td><?php echo $info['description'];?></td>
-                        <td><?php echo $info['donation_amount'];?></td>
-                        <td><?php 
-                                $sql_donetion = "SELECT sum(donation_amount) as total_donation_amount FROM donation where event_id='".$info['id']."'";
-                                $row_donetion = mysqli_fetch_assoc(mysqli_query($con, $sql_donetion));
-                                echo $row_donetion['total_donation_amount'];
-                               ?></td>
-                        <td><?php echo $info['expire_date'];?></td>
-                          <td><img width="70" src="../images/event/<?php echo $info['image'];?>"></td>
-                               <td><a class="btn btn-primary" href="../images/event/<?php echo $info['pdf'];?>"><i class="fa  fa-download"></i></a></td>
-                        <td>
-                          <?php if ($_SESSION['role']!="employee"){ ?>
-                          <a class="btn btn-success" href="delete.php?id=<?php echo $info['id'];?>&image=<?php echo $info['image'];?>&pdf=<?php echo $info['pdf'];?>"><i class="fa fa-trash"></i></a>
-                        <?php } ?>
-                          <a class="btn btn-primary text-on-primary"  href="../cause-single.php?blog_id=<?php echo $info['id'];?>">Event Details</a>
-                        </td>
-                    </tr>
-                    <?php $serialNo++;}?>
+                          <td><?php echo $sl;?></td>
+                          <td><?php echo $info['name'];?></td>
+                          <td><?php echo $info['phone'];?></td>
+                          <td><?php echo $info['userName'];?></td>
+                          <td><?php echo $info['role'];?></td>                         
+                          <td>
+                          	<?php if ($sl>1): ?>
+                          	<form method="post" action="">
+		                    	<input type="hidden" name="id" value="<?php echo $info['admin_id']; ?>">
+		                    	<button type="submit" name="delete" class="btn btn-danger">DELETE</button>
+		                    </form>
+                          	<?php endif ?>
+		                    
+                          </td>
+                    	</tr>
+                      <?php $sl++; } ?> 
                     </tbody>
-                    <tfoot>
-                    <tr>
-                       <th>Serial No</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Donation Amount</th>
-                        <th>Donated Amount</th>
-                        <th>PExpire Date</th>
-                        <th>Image</th>
-                        <th>Pdf</th>
-                        <th>Action</th>
-                    </tr>
-                    </tfoot>
                 </table>
             </div>
             <!-- /.box-body -->

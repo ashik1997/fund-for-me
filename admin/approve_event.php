@@ -8,7 +8,6 @@
 $ms='';
 if (isset($_POST['submit'])) {
 $id = $_POST['id']; 
-$user_email = $_SESSION['uEmail'];
 
 $sqlForUpdate = "UPDATE event set status=1 Where id = $id";
  
@@ -17,6 +16,26 @@ if ($queryForUpdate) {
   $mess='<div class="alert alert-success alert-dismissible">
   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
   <strong>Successfully approved...!</strong>
+</div>';
+}else{
+  $mess='<div class="alert alert-danger alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Error here...!</strong>
+</div>';
+}
+}
+// assign
+if (isset($_POST['assign'])) {
+$id = $_POST['id']; 
+$emp_id = $_POST['emp_id'];
+
+$sqlForUpdate = "UPDATE event set verify_emp_id = $emp_id, status = 2 Where id = $id";
+ 
+$queryForUpdate = mysqli_query($con,$sqlForUpdate);
+if ($queryForUpdate) {
+  $mess='<div class="alert alert-success alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Successfully assign employee...!</strong>
 </div>';
 }else{
   $mess='<div class="alert alert-danger alert-dismissible">
@@ -87,6 +106,7 @@ if ($queryForUpdate) {
                         <th>Image</th>
                         <th>Pdf</th>
                         <th>Action</th>
+                        <th>Verify by & comment</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -102,30 +122,36 @@ if ($queryForUpdate) {
                         <td><?php echo $info['description'];?></td>
                         <td><?php echo $info['donation_amount'];?></td>
                         <td><?php echo $info['expire_date'];?></td>
-                          <td><img width="70" src="../images/event/<?php echo $info['image'];?>"></td>
+                        <td><img width="70" src="../images/event/<?php echo $info['image'];?>"></td>
                                <td><a class="btn btn-primary" href="../images/event/<?php echo $info['pdf'];?>"><i class="fa fa-download"></i></a></td>
                         <td>
-                          <form method="post" action="">
+                          <form method="post" action="" class="form-horizontal">
                             <input type="hidden" name="id" value="<?php echo $info['id'];?>">
                             <button class="btn btn-success" type="submit" name="submit"><i class="fa fa-check" style="font-size:25px;color:white;"></i></button>
                           </form>
-                          
+                        </td>
+                        <td>
+                          <form method="post" action="">
+                            <div class="form-group">
+                            <input type="hidden" name="id" value="<?php echo $info['id'];?>">
+                            <select class="form-control" name="emp_id">
+                              <option value="0">Select one</option>
+                            <?php
+                            $sql_user = "SELECT * from admin where role = 'employee' order by admin_id desc";
+                            $query_user = mysqli_query($con,$sql_user);
+                            while($admin = mysqli_fetch_array($query_user)) {
+                            ?>
+                            <option <?php if($admin['admin_id'] == $info['verify_emp_id']){ echo "selected"; } ?> value="<?php echo $admin['admin_id']; ?>"><?php echo $admin['name'];?></option>
+                            <?php  } ?> 
+                          </select>
+                          </div>
+                          <button class="btn btn-success" type="submit" name="assign">Update</button>
+                        </form>
+                        <span class="label label-warning"><?php echo $info['emp_comment'];?></span>
                         </td>
                     </tr>
                     <?php $serialNo++;}?>
                     </tbody>
-                    <tfoot>
-                    <tr>
-                       <th>#</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Donation Amount</th>
-                        <th>PExpire Date</th>
-                        <th>Image</th>
-                        <th>Pdf</th>
-                        <th>Action</th>
-                    </tr>
-                    </tfoot>
                 </table>
             </div>
             <!-- /.box-body -->

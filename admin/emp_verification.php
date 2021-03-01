@@ -2,9 +2,32 @@
    include '../config.php';
   session_start();
   if ( empty($_SESSION['userName'])){
-    header("Location: login.php");
+    header("Location: ../loginReg.php");
   }
+
+$ms='';
+// assign
+if (isset($_POST['assign'])) {
+$id = $_POST['id']; 
+$comment = $_POST['comment'];
+
+$sqlForUpdate = "UPDATE event set emp_comment = '$comment', status = 0 Where id = $id";
+ 
+$queryForUpdate = mysqli_query($con,$sqlForUpdate);
+if ($queryForUpdate) {
+  $mess='<div class="alert alert-success alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Successfully verify...!</strong>
+</div>';
+}else{
+  $mess='<div class="alert alert-danger alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Error here...!</strong>
+</div>';
+}
+}
  ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,33 +69,32 @@
     <section class="content">
         <div class="box">
             <div class="box-header">
-                <h2 class="box-title"> All Event </h2>
+                <h2 class="box-title"> View  Event </h2>
             </div>
+            <?php if (!empty($mess)) {
+              echo $mess;
+              $mess='';
+            } ?>
             <!-- /.box-header -->
             <div class="box-body" style="overflow-x: auto;">
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Serial No</th>
+                        <th>#</th>
                         <th>Title</th>
                         <th>Description</th>
                         <th>Donation Amount</th>
-                        <th>Donated Amount</th>
                         <th>PExpire Date</th>
                         <th>Image</th>
                         <th>Pdf</th>
-                        <th>Action</th>
+                        <th>Comment</th>
                     </tr>
                     </thead>
                     <tbody>
-                   		<?php
+                      <?php
                         $serialNo = 1;
-
-                        $sqlFor_event = "SELECT * from event where status=1 order by id desc";
-                        if ($_SESSION['role']=="employee"){
-                          $admin_id = $_SESSION['admin_id'];
-                          $sqlFor_event = "SELECT * from event where status=1 and verify_emp_id = '$admin_id' order by id desc";
-                        }
+                        $admin_id = $_SESSION['admin_id'];
+                        $sqlFor_event = "SELECT * from event where status=2 and verify_emp_id = '$admin_id' order by id desc";
                         $queryFor_event = mysqli_query($con,$sqlFor_event);
                         while($info = mysqli_fetch_array($queryFor_event)) {
                         ?>
@@ -81,36 +103,21 @@
                         <td><?php echo $info['title'];?></td>
                         <td><?php echo $info['description'];?></td>
                         <td><?php echo $info['donation_amount'];?></td>
-                        <td><?php 
-                                $sql_donetion = "SELECT sum(donation_amount) as total_donation_amount FROM donation where event_id='".$info['id']."'";
-                                $row_donetion = mysqli_fetch_assoc(mysqli_query($con, $sql_donetion));
-                                echo $row_donetion['total_donation_amount'];
-                               ?></td>
                         <td><?php echo $info['expire_date'];?></td>
-                          <td><img width="70" src="../images/event/<?php echo $info['image'];?>"></td>
-                               <td><a class="btn btn-primary" href="../images/event/<?php echo $info['pdf'];?>"><i class="fa  fa-download"></i></a></td>
+                        <td><img width="70" src="../images/event/<?php echo $info['image'];?>"></td>
+                               <td><a class="btn btn-primary" href="../images/event/<?php echo $info['pdf'];?>"><i class="fa fa-download"></i></a></td>
                         <td>
-                          <?php if ($_SESSION['role']!="employee"){ ?>
-                          <a class="btn btn-success" href="delete.php?id=<?php echo $info['id'];?>&image=<?php echo $info['image'];?>&pdf=<?php echo $info['pdf'];?>"><i class="fa fa-trash"></i></a>
-                        <?php } ?>
-                          <a class="btn btn-primary text-on-primary"  href="../cause-single.php?blog_id=<?php echo $info['id'];?>">Event Details</a>
+                        	<form method="post" action="">
+	                            <div class="form-group">
+	                            	<input type="hidden" name="id" value="<?php echo $info['id'];?>">
+	                            	<textarea class="form-control" name="comment"><?php echo $info['emp_comment'];?></textarea>
+	                          	</div>
+                        	<button class="btn btn-success" type="submit" name="assign">Update</button>
+                        	</form>
                         </td>
                     </tr>
                     <?php $serialNo++;}?>
                     </tbody>
-                    <tfoot>
-                    <tr>
-                       <th>Serial No</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Donation Amount</th>
-                        <th>Donated Amount</th>
-                        <th>PExpire Date</th>
-                        <th>Image</th>
-                        <th>Pdf</th>
-                        <th>Action</th>
-                    </tr>
-                    </tfoot>
                 </table>
             </div>
             <!-- /.box-body -->

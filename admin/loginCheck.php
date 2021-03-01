@@ -4,7 +4,7 @@
   if(isset($_POST['submit'])){
     $userName = $_POST['userName'];
     $password = md5($_POST['password']);
-    $sql = "SELECT userName,password from admin where userName = '$userName'";
+    $sql = "SELECT * from admin where userName = '$userName'";
     $query = mysqli_query($con, $sql);
     $adminInfo = mysqli_fetch_array($query);
 
@@ -17,6 +17,8 @@
       }
       else{
           $_SESSION['userName'] = $adminInfo['userName'];
+          $_SESSION['role'] = $adminInfo['role'];
+          $_SESSION['admin_id'] = $adminInfo['admin_id'];
               header("Location: index.php");
           
       }

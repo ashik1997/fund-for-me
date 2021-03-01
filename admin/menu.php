@@ -3,7 +3,7 @@
     <!-- Logo -->
     <a href="../index.php" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>N</b>N</span>
+      <span class="logo-mini"><b>FF</b>M</span>
       <!-- logo for regular state and mobile devices -->
       <span class="logo-lg"><b>FFM</b></span>
     </a>
@@ -41,6 +41,31 @@
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
         </li>
+        <?php if ($_SESSION['role']=="employee"): ?>
+          <li class="treeview">
+          <a href="#">
+            <i class="glyphicon glyphicon-camera"></i>
+            <span>Gellary</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="gallery.php"><i class="glyphicon glyphicon-upload"></i> Create Gallery Post</a>
+            </li>
+            <li>
+              <a href="viewGallery.php"><i class="glyphicon glyphicon-eye-open"></i> View Gallery Post</a>
+            </li>
+          </ul>
+        </li>
+          <li>
+          <a href="emp_verification.php"><i class="glyphicon glyphicon-list"></i>Event verification</a>
+        </li>
+        <li>
+          <a href="all_event_list.php"><i class="glyphicon glyphicon-list"></i> All Event</a>
+        </li>
+        <?php else: ?>
          <li class="treeview">
           <a href="#">
             <i class="glyphicon glyphicon-bullhorn"></i>
@@ -87,7 +112,11 @@
         <li>
           <a href="all_event_list.php"><i class="glyphicon glyphicon-list"></i> All Event</a>
         </li>
-        
+        <li>
+          <a href="user_list.php"><i class="glyphicon glyphicon-list"></i> Employee</a>
+        </li>
+        <?php endif ?>
+
 
       </ul>
     </section>

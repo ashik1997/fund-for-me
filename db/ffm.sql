@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 01, 2021 at 05:05 AM
+-- Generation Time: Mar 02, 2021 at 06:14 PM
 -- Server version: 10.1.36-MariaDB
 -- PHP Version: 7.2.10
 
@@ -42,8 +42,8 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`admin_id`, `userName`, `password`, `name`, `phone`, `role`) VALUES
-(5, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Dorian Jenkins', '+1 (457) 132-889', 'admin'),
-(6, 'ashik', '665f216444d0235a567667bad2c09e11', 'Cheryl Dixon', '+1 (825) 371-277', 'employee');
+(5, 'admin', '21232f297a57a5a743894a0e4a801fc3', 'Zitu', '+1 (457) 132-889', 'admin'),
+(6, 'zitu', '01dab6a26b7db2bedc3d6ab33ad8d626', 'Employee', '+1 (825) 371-277', 'employee');
 
 -- --------------------------------------------------------
 
@@ -166,8 +166,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`uId`, `name`, `email`, `phone`, `password`, `nid`, `image`) VALUES
-(1, 'Cocmic', 'cosmic@gmail.com', '01974013732', '202cb962ac59075b964b07152d234b70', '101', 'user.jpg'),
-(2, 'ashik', 'ashik2@gmail.com', '01731002125', '81dc9bdb52d04dc20036dbd8313ed055', '19975645882542345', NULL);
+(1, 'Demo', 'demo@gmail.com', '01974013732', '202cb962ac59075b964b07152d234b70', '101', 'user.jpg'),
+(2, 'Demo2', 'demo2@gmail.com', '01731002125', '81dc9bdb52d04dc20036dbd8313ed055', '19975645882542345', NULL);
 
 --
 -- Indexes for dumped tables
